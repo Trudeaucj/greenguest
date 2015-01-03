@@ -21,12 +21,12 @@ m2x.devices.streamValues(deviceId, 'proximity', {}, function(data){
   console.log('Proximity sensor determines room is %s', data.json.values[0].value);
 });
 
-m2x.devices.streamStats(deviceId, 'water', {}, function(data){
-  console.log('Total water usage is %s gallons', data.json.stats.count * data.json.stats.avg);
+m2x.devices.streamValues(deviceId, 'door', {}, function(data){
+  console.log('Door is %s', data.json.values[0].value);
 });
 
-m2x.devices.streamValues(deviceId, 'energy', {}, function(data){
-  console.log('Current energy usage is %sW', data.json.values[0].value);
+m2x.devices.streamStats(deviceId, 'water', {}, function(data){
+  console.log('Total water usage is %s gallons', data.json.stats.count * data.json.stats.avg);
 });
 
 m2x.devices.streamStats(deviceId, 'energy', {}, function(data){
