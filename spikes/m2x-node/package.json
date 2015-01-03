@@ -1,0 +1,17 @@
+{
+  "name": "m2x-node",
+  "version": "0.0.1",
+  "description": "M2X Node Spike",
+  "main": "main.js",
+  "dependencies": {
+    "cron": "^1.0.5",
+    "m2x": "^2.0.2",
+    "time": "^0.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Simon Guest <me@simonguest.com> (http://github.com/simonguest)",
+  "license": "Apache 2"
+}
