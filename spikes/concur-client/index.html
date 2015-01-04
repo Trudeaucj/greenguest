@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="concur-bundle.js"></script>
+  <script>
+    function getParameterByName(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+      return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    var concur = require('concur-platform');
+
+    var options = {
+      oauthToken:getParameterByName(oauthToken)
+    };
+
+    concur.users.get(options)
+    .then(function(data) {
+      console.log(data);
+    })
+  </script>
+</head>
+<body>
+
+</body>
+</html>
