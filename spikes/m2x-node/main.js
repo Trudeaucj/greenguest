@@ -3,6 +3,10 @@ var CronJob = require('cron').CronJob;
 var M2X = require('m2x');
 var apiKey = process.env.M2X_API_KEY;
 var deviceId = process.env.M2X_DEVICE_ID;
+
+if (!apiKey) return console.log('Please set M2X_API_KEY environment variable first!');
+if (!deviceId) return console.log('Please set M2X_DEVICE_ID environment variable first!');
+
 var wunderAppId = process.env.WUNDER_APP_ID;
 var wunderDevId = process.env.WUNDER_DEV_ID;
 var wunderToken = process.env.WUNDER_TOKEN;
@@ -11,6 +15,7 @@ if (!deviceId) return console.log('Please set M2X_DEVICE_ID environment variable
 if (!wunderAppId) return console.log('Please set wunderAppId environment variable first!');
 if (!wunderDevId) return console.log('Please set wunderDevId environment variable first!');
 if (!wunderToken) return console.log('Please set wunderToken environment variable first!');
+
 
 var m2x = new M2X(apiKey);
 
