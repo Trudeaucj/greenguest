@@ -3947,7 +3947,7 @@ var request = require('browser-request'),
 
 var appKey = 'JE_4C8BB3F6D02E1B0B_1';
 //var appKey = process.env.DIGITAL_LIFE_APP_KEY;
-var userId = '553290699';
+var userId = '553474459';
 //var userId = process.env.DIGITAL_LIFE_USERID;
 var password = 'NO-PASSWD';
 //var password = process.env.DIGITAL_LIFE_PASSWORD;
@@ -4078,6 +4078,7 @@ exports.turnDeviceOff = function() {
       API : gatewayId + '/devices/' + data[0].deviceGuid + '/switch',
       body : 'off'
     };
+    console.log(options);
     return exports.post(options);
   });
 };
