@@ -2,9 +2,12 @@ var request = require('request'),
   Q = require('q'),
   _ = require('underscore');
 
-var appKey = process.env.DIGITAL_LIFE_APP_KEY;
-var userId = process.env.DIGITAL_LIFE_USERID;
-var password = process.env.DIGITAL_LIFE_PASSWORD;
+var appKey = 'JE_4C8BB3F6D02E1B0B_1';
+//var appKey = process.env.DIGITAL_LIFE_APP_KEY;
+var userId = '553474459';
+//var userId = process.env.DIGITAL_LIFE_USERID;
+var password = 'NO-PASSWD';
+//var password = process.env.DIGITAL_LIFE_PASSWORD;
 var domain = 'DL';
 
 if (!appKey) return console.log('Please set DIGITAL_LIFE_APP_KEY environment variable first!');
