@@ -1,3 +1,9 @@
+loopCurrentTemp();
+loopAverageTemp();
+loopWater();
+loopTowels();
+loopEnergy();
+
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -35,10 +41,6 @@ function loopAverageTemp() {
     },2000)
 }
 
-loopCurrentTemp();
-loopAverageTemp();
-loopWater();
-
 // function getLight() {
 //   m2x.devices.streamValues(deviceId, 'lightswitch', {}, function(data){
 //     console.log('Lightswitch is %s', data.values[0].value);
@@ -67,14 +69,32 @@ function loopWater() {
     },2000)
 }
 
-// m2x.devices.streamStats(deviceId, 'energy', {}, function(data){
-//   var kwPerMin = data.stats.count * data.stats.avg / 1000;
-//   var kwPerHour = kwPerMin / 60;
-//   console.log('Total energy usage is %s kWH', kwPerHour );
-// });
+function getEnergy() {
+  m2x.devices.streamStats(deviceId, 'energy', {}, function(data){
+    var kwPerMin = data.stats.count * data.stats.avg / 1000;
+    var kwPerHour = kwPerMin / 60;
+    // console.log('Total energy usage is %s kWH', kwPerHour );
+    $("#energy-total").html(kwPerHour);
+    loopEnergy();
+  });
+}
+
+function loopEnergy() {
+  setTimeout(function(){
+      getEnergy();
+    },2000)
+}
 
 function neverForgetYourTowel() {
-// m2x.devices.streamStats(deviceId, 'towel', {}, function(data){
-//   console.log('%s towels have been replaced', data.stats.count * data.stats.avg);
-// });
+  m2x.devices.streamStats(deviceId, 'towel', {}, function(data){
+    // console.log('%s towels have been replaced', data.stats.count * data.stats.avg);
+    $("#towels-replaced").html(data.stats.count * data.stats.avg);
+    loopTowels();
+  });
+}
+
+function loopTowels() {
+  setTimeout(function(){
+      neverForgetYourTowel();
+    },2000)
 }
