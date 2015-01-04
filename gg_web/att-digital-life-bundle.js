@@ -4074,7 +4074,7 @@ exports.turnDeviceOff = function() {
         Requesttoken: requestToken,
         Appkey : appKey
       },
-      API : gatewayId + '/devices/' + data[0].deviceGuid + '/switch',
+      API : gatewayId + '/devices/' + 'PE00000008' + '/switch',
       body : 'off'
     };
     return exports.post(options);

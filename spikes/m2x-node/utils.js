@@ -131,7 +131,8 @@ exports.turnDeviceOff = function() {
         Requesttoken: requestToken,
         Appkey : appKey
       },
-      API : gatewayId + '/devices/' + data[0].deviceGuid + '/switch',
+      //HARD CODED PE00000008 for MAIN STAGE DEMO light
+      API : gatewayId + '/devices/' + 'PE00000008' + '/switch',
       body : 'off'
     };
     return exports.post(options);
