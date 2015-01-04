@@ -40,6 +40,10 @@
             var kwPerHour = kwPerMin / 60;
             console.log('Total energy usage is %s kWH', kwPerHour );
         });
+
+        m2x.devices.streamStats(deviceId, 'towel', {}, function(data){
+            console.log('%s towels have been replaced', data.stats.count * data.stats.avg);
+        });
     </script>
 </head>
 <body>

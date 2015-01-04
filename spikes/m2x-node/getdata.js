@@ -35,3 +35,7 @@ m2x.devices.streamStats(deviceId, 'energy', {}, function(data){
   console.log('Total energy usage is %s kWH', kwPerHour );
 });
 
+m2x.devices.streamStats(deviceId, 'towel', {}, function(data){
+  console.log('%s towels have been replaced', data.json.stats.count * data.json.stats.avg);
+});
+
