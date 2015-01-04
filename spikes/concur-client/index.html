@@ -5,22 +5,72 @@
   <title></title>
   <script src="concur-bundle.js"></script>
   <script>
-    function getParameterByName(name) {
-      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-      return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    //Note, the other function we were using strips out the + sign used in request to Concur
+    function getUrlParameters(parameter, staticURL, decode){
+      /*
+       Function: getUrlParameters
+       Description: Get the value of URL parameters either from
+       current URL or static URL
+       Author: Tirumal
+       URL: www.code-tricks.com
+       */
+      var currLocation = (staticURL.length)? staticURL : window.location.search,
+        parArr = currLocation.split("?")[1].split("&"),
+        returnBool = true;
+
+      for(var i = 0; i < parArr.length; i++){
+        parr = parArr[i].split("=");
+        if(parr[0] == parameter){
+          return (decode) ? decodeURIComponent(parr[1]) : parr[1];
+          returnBool = true;
+        }else{
+          returnBool = false;
+        }
+      }
+
+      if(!returnBool) return false;
     }
 
     var concur = require('concur-platform');
 
+    var oauthToken = getUrlParameters("oauthToken", "", true) + '=';
     var options = {
-      oauthToken:getParameterByName(oauthToken)
+      oauthToken:oauthToken,
+      contentType:'application/json',
+      body: {
+        "Comment": "Credit for being a GreenGuest",
+        "CurrencyCode": "USD",
+        "ExpenseTypeCode": "LODNG",
+        "LocationCity": "Las Vegas",
+        "LocationCountry": "US",
+        "LocationSubdivision": "US-NV",
+        "TransactionAmount": "-50.00",
+        "TransactionDate": new Date(),
+        "VendorDescription": "Palm's Resort (GreenGuest)"
+      }
     };
 
-    concur.users.get(options)
+    //send the quick expense
+    concur.quickexpenses.send(options)
     .then(function(data) {
       console.log(data);
+    })
+    .fail(function(error) {
+      console.log(error);
+    })
+
+
+    //Get the itinerary
+    var options = {
+      oauthToken:oauthToken
+    };
+
+    concur.itinerary.get(options)
+    .then(function(data) {
+        console.log(data);
+    })
+    .fail(function(error) {
+        console.log(error);
     })
   </script>
 </head>
