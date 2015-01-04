@@ -20,7 +20,7 @@ exports.post = function(options) {
 
   var deferred = Q.defer();
 
-  request.post({url:temp, qs:options.queryParameters}, function(error, response, body) {
+  request.post({url:temp, qs:options.queryParameters, headers:options.headers, body:options.body}, function(error, response, body) {
     // Error with the actual request
     if (error) {
       return deferred.reject(error);
@@ -80,15 +80,22 @@ exports.getAuth = function(options) {
   return exports.post(options);
 };
 
+var gatewayId;
+var authToken;
+var requestToken;
+var appKey;
+
 exports.getDevices = function(options) {
   return exports.getAuth()
   .then(function (data) {
-    var gatewayId = data.content.gateways[0].id;
+    gatewayId = data.content.gateways[0].id;
+    authToken = data.content.authToken;
+    requestToken = data.content.requestToken;
     options = {
       API : gatewayId + '/devices',
       headers : {
-        Authtoken : data.content.authToken,
-        Requesttoken: data.content.requestToken,
+        Authtoken : authToken,
+        Requesttoken: requestToken,
         Appkey : appKey
       }
     };
@@ -102,7 +109,6 @@ exports.getDevices = function(options) {
 //door lock
 //water sensor
 
-
 exports.getDeviceByName = function(name) {
   var deferred = Q.defer();
 
@@ -112,6 +118,24 @@ exports.getDeviceByName = function(name) {
   });
   return deferred.promise;
 };
+
+exports.turnDeviceOff = function() {
+  return exports.getDeviceByName('smart-plug')
+  .then(function(data) {
+    var options = {
+      headers : {
+        Authtoken : authToken,
+        Requesttoken: requestToken,
+        Appkey : appKey
+      },
+      API : gatewayId + '/devices/' + data[0].deviceGuid + '/switch',
+      body : 'off'
+    };
+    return exports.post(options);
+  });
+};
+
+//exports.turnDeviceOff().then(function(data) {console.log(data)});
 
 exports.getAttributeByLabel = function(name, label) {
   var deferred = Q.defer();
@@ -131,9 +155,9 @@ exports.getThermostatAttributes = function() {
   return exports.getAttributeByLabel('thermostat', 'temperature');
 };
 
-exports.getThermostatAttributes().then(function(data) {
-  console.log(data);
-});
+//exports.getThermostatAttributes().then(function(data) {
+//  console.log(data);
+//});
 
 exports.getWaterSensor = function() {
   return exports.getDeviceByName('water-sensor')
