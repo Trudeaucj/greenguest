@@ -5,6 +5,14 @@ loopTowels();
 loopEnergy();
 loopDoorLight();
 
+$("#turn-off-light").on('click', function(evt) {
+  var device = require('/utils');
+    device.turnDeviceOff()
+    .then(function(data) {
+        console.log(data)
+    });
+  });
+
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
