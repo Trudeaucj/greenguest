@@ -113,9 +113,27 @@ exports.getDeviceByName = function(name) {
   return deferred.promise;
 };
 
+exports.getAttributeByLabel = function(name, label) {
+  var deferred = Q.defer();
+
+  exports.getDeviceByName(name)
+    .then(function(device) {
+      deferred.resolve(_.where(device[0].attributes, {'label':label})[0]);
+    });
+  return deferred.promise;
+};
+
 exports.getThermostat = function() {
   return exports.getDeviceByName('thermostat')
 };
+
+exports.getThermostatAttributes = function() {
+  return exports.getAttributeByLabel('thermostat', 'temperature');
+};
+
+exports.getThermostatAttributes().then(function(data) {
+  console.log(data);
+});
 
 exports.getWaterSensor = function() {
   return exports.getDeviceByName('water-sensor')
@@ -132,8 +150,3 @@ exports.getDoorlock = function() {
 exports.getDoorlock = function() {
   return exports.getDeviceByName('door-lock')
 };
-
-
-exports.getThermostat();
-
-

@@ -1,4 +1,5 @@
-var CronJob = require('cron').CronJob;
+var CronJob = require('cron').CronJob,
+    utils = require('./utils');
 
 var M2X = require('m2x');
 var apiKey = process.env.M2X_API_KEY;
@@ -9,9 +10,13 @@ if (!deviceId) return console.log('Please set M2X_DEVICE_ID environment variable
 var m2x = new M2X(apiKey);
 
 new CronJob('*/10 * * * * *', function(){
-  var temp = 70 + (Math.random()*10);
-  console.log('Temperature reading is %sF. Sending to M2X', temp);
-  m2x.devices.setStreamValue(deviceId, 'temperature', {value: temp}, function(data){
+  //var temp = 70 + (Math.random()*10);
+  utils.getThermostatAttributes().then(function(data) {
     console.log(data);
+    console.log('Temperature reading is %sF. Sending to M2X', data.value);
+    m2x.devices.setStreamValue(deviceId, 'temperature', {value: data.value}, function(data){
+      console.log(data);
+    });
   });
+
 }, null, true, "America/Los_Angeles");
