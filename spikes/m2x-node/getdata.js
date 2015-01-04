@@ -4,13 +4,18 @@ var deviceId = process.env.M2X_DEVICE_ID;
 if (!apiKey) return console.log('Please set M2X_API_KEY environment variable first!');
 if (!deviceId) return console.log('Please set M2X_DEVICE_ID environment variable first!');
 
+var convertToF = function(temp){
+  var tempC = (temp / 2) - 40;
+  return (tempC * 1.8) + 32;
+};
+
 var m2x = new M2X(apiKey);
 m2x.devices.streamValues(deviceId, 'temperature', {}, function(data){
-  console.log('Current temperature is %s', data.json.values[0].value);
+  console.log('Current temperature is %s', convertToF(data.json.values[0].value));
 });
 
 m2x.devices.streamStats(deviceId, 'temperature', {}, function(data){
-  console.log('Average temperature is %s', data.json.stats.avg);
+  console.log('Average temperature is %s', convertToF(data.json.stats.avg));
 });
 
 m2x.devices.streamValues(deviceId, 'lightswitch', {}, function(data){

@@ -10,13 +10,18 @@
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
 
+        function convertToF(temp){
+            var tempC = (temp / 2) - 40;
+            return (tempC * 1.8) + 32;
+        };
+
         var m2x = new M2X(getParameterByName('apiKey'));
         var deviceId = getParameterByName('deviceId');
         m2x.devices.streamValues(deviceId, 'temperature', {}, function(data){
-            console.log('Current temperature is %sF', data.values[0].value);
+            console.log('Current temperature is %sF', convertToF(data.values[0].value));
         });
         m2x.devices.streamStats(deviceId, 'temperature', {}, function(data){
-            console.log('Average temperature is %s', data.stats.avg);
+            console.log('Average temperature is %sF', convertToF(data.stats.avg));
         });
 
         m2x.devices.streamValues(deviceId, 'lightswitch', {}, function(data){
