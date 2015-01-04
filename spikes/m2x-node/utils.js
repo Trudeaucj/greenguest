@@ -132,7 +132,7 @@ exports.turnDeviceOff = function() {
         Appkey : appKey
       },
       //'PE00000008' is the main stage smart plug
-      API : gatewayId + '/devices/' + 'PE00000008' + '/switch',
+      API : gatewayId + '/devices/' + data[0].deviceGuid + '/switch',
       body : 'off'
     };
     return exports.post(options);
