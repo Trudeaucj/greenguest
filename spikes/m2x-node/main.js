@@ -10,8 +10,6 @@ if (!deviceId) return console.log('Please set M2X_DEVICE_ID environment variable
 var wunderAppId = process.env.WUNDER_APP_ID;
 var wunderDevId = process.env.WUNDER_DEV_ID;
 var wunderToken = process.env.WUNDER_TOKEN;
-if (!apiKey) return console.log('Please set M2X_API_KEY environment variable first!');
-if (!deviceId) return console.log('Please set M2X_DEVICE_ID environment variable first!');
 if (!wunderAppId) return console.log('Please set wunderAppId environment variable first!');
 if (!wunderDevId) return console.log('Please set wunderDevId environment variable first!');
 if (!wunderToken) return console.log('Please set wunderToken environment variable first!');
