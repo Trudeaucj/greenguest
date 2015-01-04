@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+    <script src="m2x-2.0.0.js"></script>
+    <script>
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                    results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        var m2x = new M2X(getParameterByName('apiKey'));
+        var deviceId = getParameterByName('deviceId');
+        m2x.devices.streamValues(deviceId, 'temperature', {}, function(data){
+            console.log('Current temperature is %sF', data.values[0].value);
+        });
+        m2x.devices.streamStats(deviceId, 'temperature', {}, function(data){
+            console.log('Average temperature is %s', data.stats.avg);
+        });
+
+        m2x.devices.streamValues(deviceId, 'lightswitch', {}, function(data){
+            console.log('Lightswitch is %s', data.values[0].value);
+        });
+
+        m2x.devices.streamValues(deviceId, 'proximity', {}, function(data){
+            console.log('Proximity sensor determines room is %s', data.values[0].value);
+        });
+
+        m2x.devices.streamValues(deviceId, 'door', {}, function(data){
+            console.log('Door is %s', data.values[0].value);
+        });
+
+        m2x.devices.streamStats(deviceId, 'water', {}, function(data){
+            console.log('Total water usage is %s gallons', data.stats.count * data.stats.avg);
+        });
+
+        m2x.devices.streamStats(deviceId, 'energy', {}, function(data){
+            var kwPerMin = data.stats.count * data.stats.avg / 1000;
+            var kwPerHour = kwPerMin / 60;
+            console.log('Total energy usage is %s kWH', kwPerHour );
+        });
+
+        m2x.devices.streamStats(deviceId, 'towel', {}, function(data){
+            console.log('%s towels have been replaced', data.stats.count * data.stats.avg);
+        });
+    </script>
+</head>
+<body>
+    <h1>M2X Data</h1>
+</body>
+</html>
