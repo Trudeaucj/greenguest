@@ -58,74 +58,31 @@
                 <li class="active"><a href="javascript:void(0)">Dashboard</a></li>
                 <li><a href="javascript:void(0)">Compare</a></li>
                 <li><a href="javascript:void(0)">Rewards</a></li>
+                <li><a href="checkout.html">Checkout</a></li>
+
             </ul>
         </div>
     </div>
 
     <div class="container">
-      <div id="myTabContent" class="tab-content">
-          <div class="tab-pane fade active in" id="dashboard">
-              <div class="row">
-                <div class="col-xs-6"><span style="font-size:80px">12</span></div>
-                <div class="col-xs-6"><i style="font-size:80px" class="mdi-notification-vpn-lock mdi-material-teal"></i></div>
-              </div>
-              <div class="row">
-                <div class="col-xs-6"><h2><span id="energy-total"></span> kWh</h2></div>
-                <div class="col-xs-6">
-                  <div class="progress progress-striped active">
-                      <div class="progress-bar progress-bar-danger" style="width: 75%"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-xs-6"><h2><span id="water-total"></span> gal</h2></div>
-                <div class="col-xs-6">
-                  <div class="progress progress-striped active">
-                      <div class="progress-bar" style="width: 45%"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-xs-6"><h2><span id="towels-replaced"></span> towels</h2></div>
-                <div class="col-xs-6">
-                  <div class="progress progress-striped active">
-                      <div class="progress-bar progress-bar-success" style="width: 15%"></div>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <div class="tab-pane fade" id="compare">
-              mother nature wants you babies.
-          </div>
-          <div class="tab-pane fade" id="rewards">
-            you can stay free any time you'd like
-          </div>
-          <div class="tab-pane fade" id="laundry">
-            <div class="row">
-              <div class="col-xs-3">
-                <h2>Sheet Changes:</h2>
-              </div>
-              <div class="col-xs-3">
-                <h2 class="text-success">1</h2>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-3">
-                <h2>Towels Replaced</h2>
-              </div>
-              <div class="col-xs-3">
-                <h2 class="text-danger">12</h2>
-              </div>
-            </div>
-          </div>
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Checkout Reward</h3>
+        </div>
+        <div class="panel-body">
+          <h2>Congrats! <br><br>Thank you for your conversation efforts. You qualify for $50 off your next stay!</h2>
+          <i class="mdi-action-favorite mdi-material-teal" style="font-size: 40pt;"></i>
+        </div>
       </div>
     </div>
+    
     <footer class="footer">
       <div class="container-nav">
         <ul class="nav nav-tabs">
           <li class="active"><a href="#dashboard" data-toggle="tab">Dashboad</a></li>
-          <li><a href="#compare" data-toggle="tab">Compare</a></li>
+          <!-- <li><a href="#compare" data-toggle="tab">Compare</a></li> -->
           <li><a href="#rewards" data-toggle="tab">Rewards</a></li>
+          <li><a href="#rewards" data-toggle="tab">Checkout</a></li>
         </ul>
       </div>
     </footer>
@@ -133,7 +90,7 @@
 
     <script src="bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
     <script src="bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
-    <script type="text/javascript" src="main.js"></script>
+
 
     <script>
         $(document).ready(function() {

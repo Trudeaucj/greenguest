@@ -11,13 +11,18 @@ function getParameterByName(name) {
   return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+function convertToF(temp){
+    var tempC = (temp / 2) - 40;
+    return (tempC * 1.8) + 32;
+};
+
 var m2x = new M2X(getParameterByName('apiKey'));
 var deviceId = getParameterByName('deviceId');
 
 function getCurrentTemperature() {
   m2x.devices.streamValues(deviceId, 'temperature', {}, function(data){
     // console.log('Current temperature is %sF', data.values[0].value);
-    $("#current-temperature").html(data.values[0].value);
+    $("#current-temperature").html(Math.round(convertToF(data.values[0].value)*1000)/1000);
     loopCurrentTemp();
   });
 }
@@ -30,7 +35,7 @@ function loopCurrentTemp() {
 
 function getAverageTemperature() {
   m2x.devices.streamStats(deviceId, 'temperature', {}, function(data){
-    $("#average-temperature").html(Math.round(100*data.stats.avg)/100);
+    $("#average-temperature").html(Math.round(convertToF(data.stats.avg)*1000/1000));
     loopAverageTemp();
   });
 }
@@ -59,7 +64,7 @@ function loopAverageTemp() {
 function getWater() {
   m2x.devices.streamStats(deviceId, 'water', {}, function(data){
     // console.log('Total water usage is %s gallons', data.stats.count * data.stats.avg);
-    $("#water-total").html(data.stats.count * data.stats.avg);
+    $("#water-total").html(Math.round(data.stats.count * data.stats.avg * 1000)/1000);
     loopWater();
   });
 }
