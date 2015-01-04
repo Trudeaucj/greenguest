@@ -1,4 +1,4 @@
-var request = require('request'),
+var request = require('browser-request'),
   Q = require('q'),
   _ = require('underscore');
 

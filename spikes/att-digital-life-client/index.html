@@ -5,7 +5,8 @@
   <title></title>
   <script src="att-digital-life-bundle.js"></script>
   <script>
-    turnDeviceOff()
+    var device = require('/utils');
+    device.turnDeviceOff()
     .then(function(data) {
         console.log(data)
     });
