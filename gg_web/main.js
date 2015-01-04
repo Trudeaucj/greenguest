@@ -102,7 +102,7 @@ function getEnergy() {
     var kwPerMin = data.stats.count * data.stats.avg / 1000;
     var kwPerHour = kwPerMin / 60;
     // console.log('Total energy usage is %s kWH', kwPerHour );
-    $("#energy-total").html(kwPerHour);
+    $("#energy-total").html(kwPerHour.toFixed(5));
     loopEnergy();
   });
 }
