@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -2524,187 +2524,6 @@ return Q;
 
 }).call(this,require('_process'))
 },{"_process":1}],4:[function(require,module,exports){
-var request = require('browser-request'),
-  Q = require('q'),
-  _ = require('underscore');
-
-var appKey = 'JE_4C8BB3F6D02E1B0B_1';
-//var appKey = process.env.DIGITAL_LIFE_APP_KEY;
-var userId = '553474459';
-//var userId = process.env.DIGITAL_LIFE_USERID;
-var password = 'NO-PASSWD';
-//var password = process.env.DIGITAL_LIFE_PASSWORD;
-var domain = 'DL';
-
-if (!appKey) return console.log('Please set DIGITAL_LIFE_APP_KEY environment variable first!');
-if (!userId) return console.log('Please set DIGITAL_LIFE_USERID environment variable first!');
-if (!password) return console.log('Please set DIGITAL_LIFE_PASSWORD environment variable first!');
-
-exports.serviceURL = "https://systest.digitallife.att.com:443/penguin/api/";
-
-
-exports.post = function(options) {
-  var temp = exports.serviceURL;
-  temp = temp + options.API;
-
-  var deferred = Q.defer();
-
-  request.post({url:temp, qs:options.queryParameters, headers:options.headers, body:options.body}, function(error, response, body) {
-    // Error with the actual request
-    if (error) {
-      return deferred.reject(error);
-    }
-
-    // Non-200 HTTP response code
-    if (response.statusCode != 200) {
-      return deferred.reject(error);
-    }
-
-    parsedBody = JSON.parse(body);
-
-    // 200, but Error in token payload
-    if (parsedBody.Error) return deferred.reject({'error':parsedBody.Message});
-    deferred.resolve(parsedBody);
-  });
-  return deferred.promise;
-};
-
-
-exports.get = function(options) {
-  var temp = exports.serviceURL;
-  temp = temp + options.API;
-
-  var deferred = Q.defer();
-
-  request({url:temp, headers:options.headers}, function(error, response, body) {
-    // Error with the actual request
-    if (error) {
-      return deferred.reject(error);
-    }
-
-    // Non-200 HTTP response code
-    if (response.statusCode != 200) {
-      return deferred.reject(response);
-    }
-
-    var parsedBody = JSON.parse(body);
-
-    // 200, but Error in token payload
-    if (parsedBody.Error) return deferred.reject({error: parsedBody});
-    deferred.resolve(parsedBody);
-  });
-  return deferred.promise;
-};
-
-exports.getAuth = function(options) {
-  options = {
-    API : 'authtokens',
-    queryParameters : {
-      userId : userId,
-      appKey : appKey,
-      password : password,
-      domain : domain
-    }
-  };
-  return exports.post(options);
-};
-
-var gatewayId;
-var authToken;
-var requestToken;
-var appKey;
-
-exports.getDevices = function(options) {
-  return exports.getAuth()
-  .then(function (data) {
-    gatewayId = data.content.gateways[0].id;
-    authToken = data.content.authToken;
-    requestToken = data.content.requestToken;
-    options = {
-      API : gatewayId + '/devices',
-      headers : {
-        Authtoken : authToken,
-        Requesttoken: requestToken,
-        Appkey : appKey
-      }
-    };
-    return exports.get(options)
-  });
-};
-
-//thermostat
-//light switch
-//motion detector
-//door lock
-//water sensor
-
-exports.getDeviceByName = function(name) {
-  var deferred = Q.defer();
-
-  exports.getDevices()
-  .then(function(devices) {
-    deferred.resolve(_.where(devices.content, {'deviceType':name}));
-  });
-  return deferred.promise;
-};
-
-exports.turnDeviceOff = function() {
-  return exports.getDeviceByName('smart-plug')
-  .then(function(data) {
-    var options = {
-      headers : {
-        Authtoken : authToken,
-        Requesttoken: requestToken,
-        Appkey : appKey
-      },
-      API : gatewayId + '/devices/' + data[0].deviceGuid + '/switch',
-      body : 'off'
-    };
-    return exports.post(options);
-  });
-};
-
-//exports.turnDeviceOff().then(function(data) {console.log(data)});
-
-exports.getAttributeByLabel = function(name, label) {
-  var deferred = Q.defer();
-
-  exports.getDeviceByName(name)
-    .then(function(device) {
-      deferred.resolve(_.where(device[0].attributes, {'label':label})[0]);
-    });
-  return deferred.promise;
-};
-
-exports.getThermostat = function() {
-  return exports.getDeviceByName('thermostat')
-};
-
-exports.getThermostatAttributes = function() {
-  return exports.getAttributeByLabel('thermostat', 'temperature');
-};
-
-//exports.getThermostatAttributes().then(function(data) {
-//  console.log(data);
-//});
-
-exports.getWaterSensor = function() {
-  return exports.getDeviceByName('water-sensor')
-};
-
-exports.getMontionSensor = function() {
-  return exports.getDeviceByName('motion-sensor')
-};
-
-exports.getDoorlock = function() {
-  return exports.getDeviceByName('door-lock')
-};
-
-exports.getDoorlock = function() {
-  return exports.getDeviceByName('door-lock')
-};
-
-},{"browser-request":2,"q":3,"underscore":5}],5:[function(require,module,exports){
 //     Underscore.js 1.7.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -4121,4 +3940,185 @@ exports.getDoorlock = function() {
   }
 }.call(this));
 
-},{}]},{},[4]);
+},{}],"/utils":[function(require,module,exports){
+var request = require('browser-request'),
+  Q = require('q'),
+  _ = require('underscore');
+
+var appKey = 'JE_4C8BB3F6D02E1B0B_1';
+//var appKey = process.env.DIGITAL_LIFE_APP_KEY;
+var userId = '553290699';
+//var userId = process.env.DIGITAL_LIFE_USERID;
+var password = 'NO-PASSWD';
+//var password = process.env.DIGITAL_LIFE_PASSWORD;
+var domain = 'DL';
+
+if (!appKey) return console.log('Please set DIGITAL_LIFE_APP_KEY environment variable first!');
+if (!userId) return console.log('Please set DIGITAL_LIFE_USERID environment variable first!');
+if (!password) return console.log('Please set DIGITAL_LIFE_PASSWORD environment variable first!');
+
+exports.serviceURL = "https://systest.digitallife.att.com:443/penguin/api/";
+
+
+exports.post = function(options) {
+  var temp = exports.serviceURL;
+  temp = temp + options.API;
+
+  var deferred = Q.defer();
+
+  request.post({url:temp, qs:options.queryParameters, headers:options.headers, body:options.body}, function(error, response, body) {
+    // Error with the actual request
+    if (error) {
+      return deferred.reject(error);
+    }
+
+    // Non-200 HTTP response code
+    if (response.statusCode != 200) {
+      return deferred.reject(error);
+    }
+
+    parsedBody = JSON.parse(body);
+
+    // 200, but Error in token payload
+    if (parsedBody.Error) return deferred.reject({'error':parsedBody.Message});
+    deferred.resolve(parsedBody);
+  });
+  return deferred.promise;
+};
+
+
+exports.get = function(options) {
+  var temp = exports.serviceURL;
+  temp = temp + options.API;
+
+  var deferred = Q.defer();
+
+  request({url:temp, headers:options.headers}, function(error, response, body) {
+    // Error with the actual request
+    if (error) {
+      return deferred.reject(error);
+    }
+
+    // Non-200 HTTP response code
+    if (response.statusCode != 200) {
+      return deferred.reject(response);
+    }
+
+    var parsedBody = JSON.parse(body);
+
+    // 200, but Error in token payload
+    if (parsedBody.Error) return deferred.reject({error: parsedBody});
+    deferred.resolve(parsedBody);
+  });
+  return deferred.promise;
+};
+
+exports.getAuth = function(options) {
+  options = {
+    API : 'authtokens',
+    queryParameters : {
+      userId : userId,
+      appKey : appKey,
+      password : password,
+      domain : domain
+    }
+  };
+  return exports.post(options);
+};
+
+var gatewayId;
+var authToken;
+var requestToken;
+var appKey;
+
+exports.getDevices = function(options) {
+  return exports.getAuth()
+  .then(function (data) {
+    gatewayId = data.content.gateways[0].id;
+    authToken = data.content.authToken;
+    requestToken = data.content.requestToken;
+    options = {
+      API : gatewayId + '/devices',
+      headers : {
+        Authtoken : authToken,
+        Requesttoken: requestToken,
+        Appkey : appKey
+      }
+    };
+    return exports.get(options)
+  });
+};
+
+//thermostat
+//light switch
+//motion detector
+//door lock
+//water sensor
+
+exports.getDeviceByName = function(name) {
+  var deferred = Q.defer();
+
+  exports.getDevices()
+  .then(function(devices) {
+    deferred.resolve(_.where(devices.content, {'deviceType':name}));
+  });
+  return deferred.promise;
+};
+
+exports.turnDeviceOff = function() {
+  return exports.getDeviceByName('smart-plug')
+  .then(function(data) {
+    var options = {
+      headers : {
+        Authtoken : authToken,
+        Requesttoken: requestToken,
+        Appkey : appKey
+      },
+      API : gatewayId + '/devices/' + data[0].deviceGuid + '/switch',
+      body : 'off'
+    };
+    return exports.post(options);
+  });
+};
+
+//exports.turnDeviceOff().then(function(data) {console.log(data)});
+
+exports.getAttributeByLabel = function(name, label) {
+  var deferred = Q.defer();
+
+  exports.getDeviceByName(name)
+    .then(function(device) {
+      deferred.resolve(_.where(device[0].attributes, {'label':label})[0]);
+    });
+  return deferred.promise;
+};
+
+exports.getThermostat = function() {
+  return exports.getDeviceByName('thermostat')
+};
+
+exports.getThermostatAttributes = function() {
+  return exports.getAttributeByLabel('thermostat', 'temperature');
+};
+
+//exports.getThermostatAttributes().then(function(data) {
+//  console.log(data);
+//});
+
+exports.getWaterSensor = function() {
+  return exports.getDeviceByName('water-sensor')
+};
+
+exports.getMontionSensor = function() {
+  return exports.getDeviceByName('motion-sensor')
+};
+
+exports.getDoorlock = function() {
+  return exports.getDeviceByName('door-lock')
+};
+
+exports.getDoorlock = function() {
+  return exports.getDeviceByName('door-lock')
+};
+
+},{"browser-request":2,"q":3,"underscore":4}]},{},[]);
