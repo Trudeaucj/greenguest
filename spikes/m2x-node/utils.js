@@ -131,7 +131,7 @@ exports.turnDeviceOff = function() {
         Requesttoken: requestToken,
         Appkey : appKey
       },
-      //HARD CODED PE00000008 for MAIN STAGE DEMO light
+      //'PE00000008' is the main stage smart plug
       API : gatewayId + '/devices/' + 'PE00000008' + '/switch',
       body : 'off'
     };
