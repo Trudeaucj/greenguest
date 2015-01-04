@@ -1,0 +1,80 @@
+function getParameterByName(name) {
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+var m2x = new M2X(getParameterByName('apiKey'));
+var deviceId = getParameterByName('deviceId');
+
+function getCurrentTemperature() {
+  m2x.devices.streamValues(deviceId, 'temperature', {}, function(data){
+    // console.log('Current temperature is %sF', data.values[0].value);
+    $("#current-temperature").html(data.values[0].value);
+    loopCurrentTemp();
+  });
+}
+
+function loopCurrentTemp() {
+  setTimeout(function(){
+    getCurrentTemperature();
+  },2000)
+}
+
+function getAverageTemperature() {
+  m2x.devices.streamStats(deviceId, 'temperature', {}, function(data){
+    $("#average-temperature").html(Math.round(100*data.stats.avg)/100);
+    loopAverageTemp();
+  });
+}
+
+function loopAverageTemp() {
+  setTimeout(function(){
+      getAverageTemperature();
+    },2000)
+}
+
+loopCurrentTemp();
+loopAverageTemp();
+loopWater();
+
+// function getLight() {
+//   m2x.devices.streamValues(deviceId, 'lightswitch', {}, function(data){
+//     console.log('Lightswitch is %s', data.values[0].value);
+//   });
+// }
+
+
+// m2x.devices.streamValues(deviceId, 'proximity', {}, function(data){
+//   console.log('Proximity sensor determines room is %s', data.values[0].value);
+// });
+
+// m2x.devices.streamValues(deviceId, 'door', {}, function(data){
+//   console.log('Door is %s', data.values[0].value);
+// });
+
+function getWater() {
+  m2x.devices.streamStats(deviceId, 'water', {}, function(data){
+    // console.log('Total water usage is %s gallons', data.stats.count * data.stats.avg);
+    $("#water-total").html(data.stats.count * data.stats.avg);
+    loopWater();
+  });
+}
+function loopWater() {
+  setTimeout(function(){
+      getWater();
+    },2000)
+}
+
+// m2x.devices.streamStats(deviceId, 'energy', {}, function(data){
+//   var kwPerMin = data.stats.count * data.stats.avg / 1000;
+//   var kwPerHour = kwPerMin / 60;
+//   console.log('Total energy usage is %s kWH', kwPerHour );
+// });
+
+function neverForgetYourTowel() {
+// m2x.devices.streamStats(deviceId, 'towel', {}, function(data){
+//   console.log('%s towels have been replaced', data.stats.count * data.stats.avg);
+// });
+}
