@@ -3,6 +3,7 @@ loopAverageTemp();
 loopWater();
 loopTowels();
 loopEnergy();
+loopDoorLight();
 
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -57,9 +58,23 @@ function loopAverageTemp() {
 //   console.log('Proximity sensor determines room is %s', data.values[0].value);
 // });
 
-// m2x.devices.streamValues(deviceId, 'door', {}, function(data){
-//   console.log('Door is %s', data.values[0].value);
-// });
+function getDoorLight() {
+  m2x.devices.streamValues(deviceId, 'door', {}, function(door){
+    m2x.devices.streamValues(deviceId, 'lightswitch', {}, function(light){
+      lightVal = light.values[0].value;
+      doorVal = door.values[0].value;
+      if (lightVal == 'on' && doorVal == 'closed') {
+        $("#energy-alert").show();
+      }
+      loopDoorLight();
+    });
+  });
+}
+function loopDoorLight() {
+  setTimeout(function(){
+      getDoorLight();
+    },2000)
+}
 
 function getWater() {
   m2x.devices.streamStats(deviceId, 'water', {}, function(data){
